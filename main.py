@@ -96,6 +96,7 @@ class Accessibilitron:
         if not raw_ancs_w_line.startswith('ANCS+OK'):
             return
         event_id = raw_ancs_w_line[3:7]
+        print(raw_ancs_w_line)
         for active_notification in self.active_notifications:
             if active_notification.event_id == event_id:
                 active_notification.set_from_message_string(raw_ancs_w_line)
