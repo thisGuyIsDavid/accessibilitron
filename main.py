@@ -73,7 +73,7 @@ class Accessibilitron:
         ancs_message_object = ANCSMessage.set_from_message_string(message)
         print(ancs_message_object)
         print(f"OK+ANCS{ancs_message_object.event_id}100")
-        self.serial.write(f"OK+ANCS{ancs_message_object.event_id}100".encode())
+        self.serial.write(f"OK+ANCS{ancs_message_object.event_id}000".encode())
 
 
 
