@@ -92,6 +92,15 @@ class Accessibilitron:
         elif ok_ancs_line.startswith('8'):
             self.process_ancs_notification(ok_ancs_line)
 
+    def process_ancs_w_line(self, raw_ancs_w_line):
+        if not raw_ancs_w_line.startswith('ANCS+OK'):
+            return
+        event_id = raw_ancs_w_line[3:7]
+        for active_notification in self.active_notifications:
+            if active_notification.event_id == event_id:
+                active_notification.set_from_message_string(raw_ancs_w_line)
+                active_notification.details_found = True
+
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
         if raw_hm_10_str == '':
@@ -99,14 +108,15 @@ class Accessibilitron:
 
         #   Documentation suggests this should be "AT+ANCS,"
         #   but it comes out at "OK+ANCS"
-        ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
 
-        print(raw_hm_10_str)
-
-        for ok_ancs_str in ok_ancs_as_list:
-            self.process_ok_ancs_line_from_list(ok_ancs_str)
-
-
+        #   This is identifying a notification.
+        if 'OK+ANCSW' in raw_hm_10_str:
+            self.process_ancs_w_line(raw_hm_10_str)
+            return
+        if 'OK+ANCS8' in raw_hm_10_str:
+            ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
+            for ok_ancs_str in ok_ancs_as_list:
+                self.process_ok_ancs_line_from_list(ok_ancs_str)
 
     def run(self):
         try:
