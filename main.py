@@ -90,9 +90,11 @@ class Accessibilitron:
             if message.startswith('W'):
                 print('new message', new_response)
                 new_response = ''
+
             if message.startswith(': :'):
                 new_response += message
-
+            else:
+                print(message)
             continue
         self.find_details_of_alerts()
 
