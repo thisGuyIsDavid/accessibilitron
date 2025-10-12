@@ -1,4 +1,5 @@
 # !/usr/bin/env python
+
 import time
 import firebase_admin
 import serial
@@ -33,9 +34,6 @@ class Accessibilitron:
         self.set_serial()
         print("SENDING \"AT\" to HM-10")
         self.serial.write("AT".encode())
-
-        self.last_refresh_time = datetime.datetime.now()
-
     #   ANCS
     def set_serial(self):
         self.serial = serial.Serial(
@@ -70,9 +68,13 @@ class Accessibilitron:
             self.is_hearing_aid_on = False
             return
         self.is_hearing_aid_on = self.latest_firebase_data.get('hearing_aid').get('status') == 'ON'
+        print(self.is_hearing_aid_on)
 
     def is_time_for_refresh(self) -> bool:
         current_time = datetime.datetime.now()
+        if self.last_refresh_time is None:
+            self.last_refresh_time = current_time
+            return True
         if (current_time - self.last_refresh_time).seconds >= FIREBASE_REFRESH_SECONDS:
             self.last_refresh_time = current_time
             return True
@@ -81,6 +83,11 @@ class Accessibilitron:
     def set_data_from_firebase(self):
         if not self.is_time_for_refresh():
             return
+        # Get a database reference to our posts
+        self.latest_firebase_data = db.reference().get()
+
+        self.set_hearing_aid_status()
+        self.latest_firebase_data = None
 
     #   PROGRAM.
     def run(self):
