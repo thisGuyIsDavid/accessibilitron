@@ -17,16 +17,7 @@ class Accessibilitron:
         #   ANCS
         self.serial = None
         self.has_completed_setup: bool = False
-
         self.active_notifications: typing.List[ANCSNotification] = []
-
-        self.id_of_notification_to_detail = None
-
-        self.idx_of_notification_to_detail = None
-
-        self.notification_to_detail = None
-
-
         self.setup()
 
     def setup(self):
@@ -50,23 +41,13 @@ class Accessibilitron:
         self.serial.write("AT".encode())
         self.has_completed_setup = True
 
-    def get_index_of_notification_without_detail(self):
-        for idx in range(len(self.active_notifications)):
-            if self.active_notifications[idx].details_found:
-                continue
-            return idx
-
     def find_details_of_active_ancs_notifications(self):
-        for notification in self.active_notifications:
-            if notification.details_found:
-                continue
-            self.id_of_notification_to_detail = notification.event_id
-            break
-
-        if self.id_of_notification_to_detail is None:
+        notifications_to_detail = [x for x in self.active_notifications if not x.has_details()]
+        if len(notifications_to_detail) == 0:
             return
-        print(f"AT+ANCS{self.id_of_notification_to_detail}000")
-        self.serial.write(f"AT+ANCS{self.id_of_notification_to_detail}000".encode())
+        notification_to_detail = notifications_to_detail[0]
+        print(f"SENDING: AT+ANCS{notification_to_detail.event_id}000")
+        self.serial.write(f"AT+ANCS{notification_to_detail.event_id}000".encode())
 
     def process_ancs_notification(self, ancs_notification_string: str):
         ancs_notification_string = ancs_notification_string[1:]
@@ -84,9 +65,6 @@ class Accessibilitron:
     def process_ok_ancs_line_from_list(self, ok_ancs_line: str):
         if len(ok_ancs_line) == 0:
             return
-        if self.notification_to_detail is not None:
-            if ok_ancs_line[0] in ['W', ':']:
-                self.notification_to_detail.add_detail(ok_ancs_line)
         elif ok_ancs_line.startswith('8'):
             self.process_ancs_notification(ok_ancs_line)
 
@@ -94,11 +72,11 @@ class Accessibilitron:
         if not raw_ancs_w_line.startswith('OK+'):
             return
         event_id = raw_ancs_w_line[3:7]
+
         for active_notification in self.active_notifications:
             if active_notification.event_id == event_id:
+                print('setting details for', event_id)
                 active_notification.add_detail(raw_ancs_w_line)
-                active_notification.details_found = True
-                print(active_notification)
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')

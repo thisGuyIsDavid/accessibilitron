@@ -32,8 +32,10 @@ class ANCSNotification:
     def get_unique_string(self):
         return "%s_%s" % (self.category, self.event_id)
 
+    def has_details(self):
+        return self.detail_string != ''
+
     def add_detail(self, detail_str: str):
-        #   W string is provided to acknowledge receipt, but shouldn't be tracked.
         self.detail_string = detail_str
 
     @staticmethod
