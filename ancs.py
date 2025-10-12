@@ -47,6 +47,7 @@ class Accessibilitron:
             if active_ancs_notification.details_found:
                 continue
             self.find_details_of_active_ancs_notification(active_ancs_notification)
+            break
 
     def find_details_of_active_ancs_notification(self, ancs_notification):
         self.active_ancs_notification_to_detail = ancs_notification
