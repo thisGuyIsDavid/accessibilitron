@@ -70,6 +70,7 @@ class Accessibilitron:
             print(f"AT+ANCS{alert.event_id}132")
             self.serial.write(f"AT+ANCS{alert.event_id}132".encode())
             alert.details_found = True
+            break
 
     def process_read_line(self, read_line_bits):
         read_line = read_line_bits.decode('utf-8')
