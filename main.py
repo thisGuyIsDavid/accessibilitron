@@ -91,9 +91,7 @@ class Accessibilitron:
             self.process_ancs_notification(ok_ancs_line)
 
     def process_ancs_w_line(self, raw_ancs_w_line):
-        print('W', raw_ancs_w_line)
-
-        if not raw_ancs_w_line.startswith('ANCS+OK'):
+        if not raw_ancs_w_line.startswith('OK+'):
             return
         event_id = raw_ancs_w_line[3:7]
         for active_notification in self.active_notifications:
