@@ -54,9 +54,8 @@ class Accessibilitron:
                 if self.active_ancs_notification_to_detail.event_id == ancs_notification.event_id:
                     self.active_ancs_notification_to_detail = None
 
-            print(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000")
-
             self.active_ancs_notification_to_detail = ancs_notification
+            print(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000")
             self.serial.write(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000".encode())
             ancs_notification.details_found = True
 
