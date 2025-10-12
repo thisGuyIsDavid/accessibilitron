@@ -8,6 +8,7 @@ from firebase_admin import credentials
 from firebase_admin import db
 from gpiozero import LED
 from ancs_message import ANCSMessage
+import typing
 
 #   Initialize Firebase
 firebase_admin.initialize_app(
@@ -27,6 +28,7 @@ class Accessibilitron:
     def __init__(self):
         #   ANCS
         self.serial = None
+        self.ancs_messages: typing.List[ANCSMessage] = []
 
         #   FIREBASE
         self.last_refresh_time: datetime.datetime | None = None
@@ -65,16 +67,16 @@ class Accessibilitron:
             if len(message) == 9:
                 self.process_message(message)
 
+        print(f"AT+ANCS{self.ancs_messages[0].event_id}100")
+        self.serial.write(f"OK+ANCS{self.ancs_messages[0].event_id}000".encode())
+
     def process_message(self, message: str):
         if not message.startswith('8'):
             return
         #   Strip the eight.
         message = message[1:]
         ancs_message_object = ANCSMessage.set_from_message_string(message)
-        print(ancs_message_object)
-        print(f"AT+ANCS{ancs_message_object.event_id}100")
-        self.serial.write(f"OK+ANCS{ancs_message_object.event_id}000".encode())
-
+        self.ancs_messages.append(ancs_message_object)
 
 
     #   FIREBASE
