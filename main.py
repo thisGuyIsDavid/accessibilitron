@@ -56,11 +56,13 @@ class Accessibilitron:
             return
         read_line = read_line.decode('utf-8')
         message_array = read_line.split('OK+ANCS')
-        print(message_array)
         for message in message_array:
-            # messages must be nine characters long to analyze.
+            # Messages must be nine characters long to analyze.
             if len(message) == 9:
-                print(message)
+                self.process_message(message)
+
+    def process_message(self, message: str):
+        print(message)
 
     #   FIREBASE
     def get_data_from_firebase(self):
