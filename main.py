@@ -77,9 +77,9 @@ class Accessibilitron:
             else:
                 print(parameter_1, message)
             continue
-        if len(self.ancs_alerts) > 0:
-            print(f"AT+ANCS{self.ancs_alerts[0].event_id}000")
-            self.serial.write(f"AT+ANCS{self.ancs_alerts[0].event_id}000".encode())
+        if len(self.ancs_alerts) > 3:
+            print(f"AT+ANCS{self.ancs_alerts[2].event_id}132")
+            self.serial.write(f"AT+ANCS{self.ancs_alerts[2].event_id}132".encode())
 
     def process_message(self, message: str):
         if not message.startswith('8'):
