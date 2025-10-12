@@ -60,6 +60,9 @@ class Accessibilitron:
         read_line = read_line_bits.decode('utf-8')
         message_array = read_line.split('OK+ANCS')
         for message in message_array:
+            if len(message) == 0:
+                continue
+
             parameter_1 = message[0]
             print(parameter_1, message)
             continue
