@@ -1,4 +1,4 @@
-
+from typing import List
 
 class ANCSMessage:
 
@@ -7,10 +7,14 @@ class ANCSMessage:
         self.action = kwargs.get('action')
         self.category = kwargs.get('category')
         self.count = kwargs.get('count')
+
+        self.detail_strings: List[str] = []
         self.details_found: bool = False
 
     def __repr__(self):
-        return "%s: %s (%s), id: %s" % (self.action, self.category, self.count, self.event_id)
+        return "%s: %s (%s), id: %s, value: %" % (
+            self.action, self.category, self.count, self.event_id, ' '.join(self.detail_strings)
+        )
 
     def to_json(self):
         return {
@@ -28,6 +32,9 @@ class ANCSMessage:
 
     def get_unique_string(self):
         return "%s_%s" % (self.category, self.event_id)
+
+    def add_detail(self, detail_str: str):
+        self.detail_strings.append(detail_str)
 
     @staticmethod
     def set_from_message_string(message_string):
