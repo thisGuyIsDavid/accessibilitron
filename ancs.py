@@ -55,7 +55,6 @@ class Accessibilitron:
                 if self.active_ancs_notification_to_detail.event_id == ancs_notification.event_id:
                     self.active_ancs_notification_to_detail = None
                     continue
-
             self.active_ancs_notification_to_detail = ancs_notification
             print(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000")
             self.serial.write(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000".encode())
@@ -92,7 +91,6 @@ class Accessibilitron:
         for ok_ancs_str in ok_ancs_as_list:
             self.process_ok_ancs_line_from_list(ok_ancs_str)
 
-
     def run(self):
         try:
             self.setup_active_alerts()
@@ -100,7 +98,6 @@ class Accessibilitron:
                 ancs_message = self.serial.readline()
                 self.process_line_from_hm_10(ancs_message)
                 time.sleep(0.05)
-
                 self.find_details_of_active_ancs_notifications()
         except KeyboardInterrupt as ke:
             pass
