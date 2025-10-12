@@ -68,8 +68,7 @@ class Accessibilitron:
                 self.process_message(message)
         if len(self.ancs_messages) == 0:
             return
-        print(f"AT+ANCS{self.ancs_messages[0].event_id}100")
-        self.serial.write(f"AT+ANCS{self.ancs_messages[0].event_id}000".encode())
+
 
     def process_message(self, message: str):
         if not message.startswith('8'):
@@ -78,7 +77,8 @@ class Accessibilitron:
         message = message[1:]
         ancs_message_object = ANCSMessage.set_from_message_string(message)
         self.ancs_messages.append(ancs_message_object)
-
+        print(f"AT+ANCS{ancs_message_object.event_id}000")
+        self.serial.write(f"AT+ANCS{ancs_message_object.event_id}000".encode())
 
     #   FIREBASE
     def get_data_from_firebase(self):
