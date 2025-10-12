@@ -58,6 +58,7 @@ class Accessibilitron:
         if read_line == '':
             return
         read_line = read_line.decode('utf-8')
+        print('read line', read_line)
         message_array = read_line.split('OK+ANCS')
         for message in message_array:
             # Messages must be eight characters long to analyze.
@@ -71,6 +72,9 @@ class Accessibilitron:
         message = message[1:]
         ancs_message_object = ANCSMessage.set_from_message_string(message)
         print(ancs_message_object)
+        self.serial.write(f"AT+ANCS{ancs_message_object.event_id}".encode())
+
+
 
     #   FIREBASE
     def get_data_from_firebase(self):
