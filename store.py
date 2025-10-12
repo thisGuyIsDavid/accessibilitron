@@ -1,6 +1,5 @@
 line = 'OK+0000OK+ANCSWOK+ANCS:14com.apple.moOK+ANCS:09bilephone'
+split_ancs_w_line = line.split('OK+ANCS')
 
-event_id = line[3:7]
-print(event_id)
-
-print(line.split('OK+'))
+response =
+print(response)

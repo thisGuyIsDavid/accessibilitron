@@ -11,6 +11,7 @@ from firebase_admin import db
 
 from app.ancs_notification import ANCSNotification
 
+
 class Accessibilitron:
 
     def __init__(self):
@@ -71,11 +72,18 @@ class Accessibilitron:
     def process_ancs_w_line(self, raw_ancs_w_line):
         if not raw_ancs_w_line.startswith('OK+'):
             return
-        event_id = raw_ancs_w_line[3:7]
+        split_ancs_w_line = raw_ancs_w_line.split('OK+ANCS')
+        if len(split_ancs_w_line) != 4:
+            return
+        if split_ancs_w_line[1] != 'W':
+            return
+
+        event_id = split_ancs_w_line[0][3:7]
+        detail = ''.join([x[3:] for x in split_ancs_w_line[2:]])
 
         for active_notification in self.active_notifications:
             if active_notification.event_id == event_id:
-                active_notification.add_detail(raw_ancs_w_line)
+                active_notification.add_detail(detail)
                 print(active_notification)
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
