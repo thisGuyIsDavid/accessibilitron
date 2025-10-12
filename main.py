@@ -116,8 +116,6 @@ class Accessibilitron:
         else:
             print(raw_hm_10_str)
 
-
-
     def is_time_for_refresh(self) -> bool:
         current_time = datetime.datetime.now()
         if self.last_refresh_time is None:
@@ -128,6 +126,11 @@ class Accessibilitron:
             return True
         return False
 
+    def refresh(self):
+        if not self.is_time_for_refresh():
+            return
+        print('refresh time')
+
     def run(self):
         try:
             self.setup_active_notifications()
@@ -137,11 +140,8 @@ class Accessibilitron:
                 self.process_line_from_hm_10(ancs_message)
                 self.find_details_of_active_ancs_notifications()
 
-                #   FIREBASE
-
-
+                self.refresh()
                 time.sleep(0.05)
-
         except KeyboardInterrupt as ke:
             pass
         finally:
