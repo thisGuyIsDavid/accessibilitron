@@ -72,6 +72,7 @@ class Accessibilitron:
         if self.active_ancs_notification_to_detail is not None:
             if ok_ancs_line[0] in ['W', ':']:
                 self.active_ancs_notification_to_detail.add_detail(ok_ancs_line)
+                print('detail', ok_ancs_line)
             else:
                 self.active_ancs_notification_to_detail.details_found = True
                 print(self.active_ancs_notification_to_detail)
