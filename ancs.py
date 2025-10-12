@@ -89,6 +89,8 @@ class Accessibilitron:
                 ancs_message = self.serial.readline()
                 self.process_line_from_hm_10(ancs_message)
                 time.sleep(0.05)
+
+                self.setup_active_alerts()
         except KeyboardInterrupt as ke:
             pass
         finally:
