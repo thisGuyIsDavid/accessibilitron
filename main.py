@@ -67,8 +67,8 @@ class Accessibilitron:
             if alert.details_found:
                 continue
 
-            print(f"AT+ANCS{alert.event_id}132")
-            self.serial.write(f"AT+ANCS{alert.event_id}132".encode())
+            print(f"AT+ANCS{alert.event_id}000")
+            self.serial.write(f"AT+ANCS{alert.event_id}000".encode())
             alert.details_found = True
             break
 
