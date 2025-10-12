@@ -1,11 +1,12 @@
 # !/usr/bin/env python
 
 import time
+import datetime
 import firebase_admin
 import serial
 from firebase_admin import credentials
 from firebase_admin import db
-import datetime
+from gpiozero import LED
 
 #   Initialize Firebase
 firebase_admin.initialize_app(
@@ -16,6 +17,7 @@ firebase_admin.initialize_app(
 )
 
 FIREBASE_REFRESH_SECONDS = 15
+HEARING_AID_PIN = 21
 
 class Accessibilitron:
 
@@ -24,9 +26,12 @@ class Accessibilitron:
         self.serial = None
 
         #   FIREBASE
-        self.is_hearing_aid_on: bool = False
         self.last_refresh_time: datetime.datetime | None = None
         self.latest_firebase_data = None
+
+        #   HEARING AID
+        self.is_hearing_aid_on: bool = False
+        self.hearing_aid_led = LED(HEARING_AID_PIN)
 
         self.setup()
 
@@ -68,7 +73,11 @@ class Accessibilitron:
             self.is_hearing_aid_on = False
             return
         self.is_hearing_aid_on = self.latest_firebase_data.get('hearing_aid').get('status') == 'ON'
-        print(self.is_hearing_aid_on)
+
+        if self.is_hearing_aid_on:
+            self.hearing_aid_led.on()
+        else:
+            self.hearing_aid_led.off()
 
     def is_time_for_refresh(self) -> bool:
         current_time = datetime.datetime.now()
