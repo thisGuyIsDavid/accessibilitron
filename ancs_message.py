@@ -8,13 +8,12 @@ class ANCSMessage:
         self.category = kwargs.get('category')
         self.count = kwargs.get('count')
 
-        self.detail_strings: List[str] = []
         self.detail_string: str = ''
         self.details_found: bool = False
 
     def __repr__(self):
         return "%s: %s (%s), id: %s, details: %s" % (
-            self.action, self.category, self.count, self.event_id, self.detail_string
+            self.action, self.category, self.count, self.event_id, self.detail_string.strip()
         )
 
     def to_json(self):
@@ -39,9 +38,8 @@ class ANCSMessage:
         if detail_str.startswith('W'):
             return
         if len(detail_str) > 4:
-            detail_str = detail_str[3:].strip()
+            detail_str = detail_str[3:].strip().replace('\n', ' ')
             self.detail_string += detail_str
-            self.detail_strings.append(detail_str)
 
     @staticmethod
     def set_from_message_string(message_string):
