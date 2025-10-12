@@ -34,8 +34,11 @@ class ANCSMessage:
         return "%s_%s" % (self.category, self.event_id)
 
     def add_detail(self, detail_str: str):
-        self.detail_strings.append(detail_str)
-        print(detail_str)
+        #   W string is provided to acknowledge receipt, but shouldn't be tracked.
+        if detail_str.startswith('W'):
+            return
+        if len(detail_str) > 4:
+            self.detail_strings.append(detail_str[4:])
 
     @staticmethod
     def set_from_message_string(message_string):

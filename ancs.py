@@ -44,6 +44,9 @@ class Accessibilitron:
 
     def find_details_of_active_ancs_notifications(self):
         #   Must do one at a time.
+        if self.active_ancs_notification_to_detail is not None:
+            print(self.active_ancs_notification_to_detail)
+
         for ancs_notification in self.active_ancs_notifications:
             if ancs_notification.details_found:
                 continue
