@@ -11,6 +11,7 @@ from config import REFRESH_SECONDS
 
 from app.ancs_notification import ANCSNotification
 
+
 class Accessibilitron:
     def __init__(self):
         #   META
@@ -58,7 +59,13 @@ class Accessibilitron:
     def process_ancs_notification(self, ancs_notification_string: str):
         ancs_notification_string = ancs_notification_string[1:]
         ancs_message_object = ANCSNotification.set_from_message_string(ancs_notification_string)
+
         if ancs_message_object.action == 'ADDED':
+            #   When the phone reconnects, the "old" messages will not get removed.
+            #   We must check for events already existing.
+            event_ids_in_notifications = set([x.event_id for x in self.active_notifications])
+            if ancs_message_object.event_id in event_ids_in_notifications:
+                return
             self.active_notifications.append(ancs_message_object)
         else:
             self.active_notifications = [
