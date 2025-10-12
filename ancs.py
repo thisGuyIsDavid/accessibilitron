@@ -36,6 +36,8 @@ class Accessibilitron:
         )
 
     def setup_active_alerts(self):
+        if self.has_completed_setup:
+            return
         print("Setting up active alerts.")
         self.serial.write("AT".encode())
         self.has_completed_setup = True
@@ -90,7 +92,7 @@ class Accessibilitron:
                 self.process_line_from_hm_10(ancs_message)
                 time.sleep(0.05)
 
-                self.setup_active_alerts()
+                self.find_details_of_active_ancs_notifications()
         except KeyboardInterrupt as ke:
             pass
         finally:
