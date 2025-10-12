@@ -66,7 +66,8 @@ class Accessibilitron:
             # Messages must be eight characters long to analyze.
             if len(message) == 9:
                 self.process_message(message)
-
+        if len(self.ancs_messages) == 0:
+            return
         print(f"AT+ANCS{self.ancs_messages[0].event_id}100")
         self.serial.write(f"AT+ANCS{self.ancs_messages[0].event_id}000".encode())
 
