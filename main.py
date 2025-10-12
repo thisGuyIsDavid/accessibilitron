@@ -101,6 +101,7 @@ class Accessibilitron:
             if active_notification.event_id == event_id:
                 active_notification.set_from_message_string(raw_ancs_w_line)
                 active_notification.details_found = True
+                print(active_notification)
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
