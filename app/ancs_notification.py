@@ -65,6 +65,7 @@ class ANCSNotification:
             "1": "MODIFIED",
             "2": "DELETED"
         }
+        print(message_string)
         action_string = action_id_lookup[message_string[0]]
         category_string = category_id_lookup[message_string[1]]
         alert_count = int(message_string[3], 16)
