@@ -53,11 +53,13 @@ class Accessibilitron:
             if self.active_ancs_notification_to_detail is not None:
                 if self.active_ancs_notification_to_detail.event_id == ancs_notification.event_id:
                     self.active_ancs_notification_to_detail = None
+                    continue
 
             self.active_ancs_notification_to_detail = ancs_notification
             print(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000")
             self.serial.write(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000".encode())
             ancs_notification.details_found = True
+            break
 
     def process_ancs_alert(self, ancs_alert_string: str):
         ancs_alert_string = ancs_alert_string[1:]
