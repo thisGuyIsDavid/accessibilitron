@@ -35,6 +35,7 @@ class ANCSMessage:
 
     def add_detail(self, detail_str: str):
         self.detail_strings.append(detail_str)
+        print(detail_str)
 
     @staticmethod
     def set_from_message_string(message_string):
