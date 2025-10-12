@@ -68,7 +68,7 @@ class Accessibilitron:
                 self.process_message(message)
 
         print(f"AT+ANCS{self.ancs_messages[0].event_id}100")
-        self.serial.write(f"OK+ANCS{self.ancs_messages[0].event_id}000".encode())
+        self.serial.write(f"AT+ANCS{self.ancs_messages[0].event_id}000".encode())
 
     def process_message(self, message: str):
         if not message.startswith('8'):
