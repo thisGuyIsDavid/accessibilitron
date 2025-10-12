@@ -52,7 +52,7 @@ class Accessibilitron:
         if len(notifications_to_detail) == 0:
             return
         notification_to_detail = notifications_to_detail[0]
-        print(f"SENDING: AT+ANCS{notification_to_detail.event_id}000")
+        #   print(f"SENDING: AT+ANCS{notification_to_detail.event_id}000")
         self.serial.write(f"AT+ANCS{notification_to_detail.event_id}000".encode())
 
     def process_ancs_notification(self, ancs_notification_string: str):
@@ -106,6 +106,11 @@ class Accessibilitron:
         else:
             print(raw_hm_10_str)
 
+    #   STATUSES
+    def has_missed_calls(self) -> bool:
+        missed_call_alerts = [x for x in self.active_notifications if x.category == 'MISSED CALL']
+        return len(missed_call_alerts) > 0
+
     def is_time_for_refresh(self) -> bool:
         current_time = datetime.datetime.now()
         if self.last_refresh_time is None:
@@ -116,11 +121,14 @@ class Accessibilitron:
             return True
         return False
 
-
     def set_display(self):
         self.display.set_hearing_aid_light(
             self.firebase.is_hearing_aid_on
         )
+        self.display.set_missed_call_light(
+            self.has_missed_calls()
+        )
+
 
     def refresh(self):
         if not self.is_time_for_refresh():

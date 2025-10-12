@@ -38,4 +38,3 @@ class Firebase:
             self.is_hearing_aid_on = False
             return
         self.is_hearing_aid_on = self.latest_firebase_data.get('hearing_aid').get('status') == 'ON'
-        print(self.is_hearing_aid_on)
