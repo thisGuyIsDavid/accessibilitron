@@ -35,14 +35,7 @@ class ANCSNotification:
         return self.detail_string != ''
 
     def add_detail(self, detail_str: str):
-        split_detail_str: list = detail_str.split('OK+ANCS')
-
-
         self.detail_string = detail_str
-
-
-
-
 
     @staticmethod
     def set_from_message_string(message_string):

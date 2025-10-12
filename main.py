@@ -53,10 +53,8 @@ class Accessibilitron:
     def process_ancs_notification(self, ancs_notification_string: str):
         ancs_notification_string = ancs_notification_string[1:]
         ancs_message_object = ANCSNotification.set_from_message_string(ancs_notification_string)
-
         if ancs_message_object.action == 'ADDED':
             self.active_notifications.append(ancs_message_object)
-            print('new notification', ancs_message_object, datetime.datetime.now())
         else:
             self.active_notifications = [
                 x for x in self.active_notifications
@@ -77,7 +75,6 @@ class Accessibilitron:
             return
         if split_ancs_w_line[1] != 'W':
             return
-
         event_id = split_ancs_w_line[0][3:7]
         detail = ''.join([x[3:] for x in split_ancs_w_line[2:]])
 
