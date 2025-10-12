@@ -39,6 +39,7 @@ class Accessibilitron:
         self.set_serial()
         print("SENDING \"AT\" to HM-10")
         self.serial.write("AT".encode())
+
     #   ANCS
     def set_serial(self):
         self.serial = serial.Serial(
@@ -55,6 +56,7 @@ class Accessibilitron:
             return
         read_line = read_line.decode('utf-8')
         message_array = read_line.split('OK+ANCS')
+        print(message_array)
         for message in message_array:
             # messages must be nine characters long to analyze.
             if len(message) == 9:
