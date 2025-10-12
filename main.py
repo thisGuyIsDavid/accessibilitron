@@ -79,15 +79,20 @@ class Accessibilitron:
         #   Documentation suggests this should be "AT+ANCS,"
         #   but it comes out at "OK+ANCS"
         message_array = read_line.split('OK+ANCS')
+        new_response = ''
         for message in message_array:
             if len(message) == 0:
                 continue
-            parameter_1 = message[0]
 
-            if parameter_1 == '8':
+            parameter_1 = message[0]
+            if message.startswith('8'):
                 self.process_ancs_alert(message)
-            else:
-                print(parameter_1, message)
+            if message.startswith('W'):
+                print('new message', new_response)
+                new_response = ''
+            if message.startswith(': :'):
+                new_response += message
+
             continue
         self.find_details_of_alerts()
 
