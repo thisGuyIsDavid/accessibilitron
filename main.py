@@ -83,14 +83,11 @@ class Accessibilitron:
         for message in message_array:
             if len(message) == 0:
                 continue
-
-            parameter_1 = message[0]
             if message.startswith('8'):
                 self.process_ancs_alert(message)
             if message.startswith('W'):
                 print('new message', new_response)
                 new_response = ''
-
             if message.startswith(':'):
                 new_response += message
             else:

@@ -1,13 +1,30 @@
+# !/usr/bin/env python
+
+import time
+import typing
 import serial
+from ancs_message import ANCSMessage
 
 
-
-class ANCSiousReader:
-    serial = None
+class Accessibilitron:
 
     def __init__(self):
-        self.is_running = True
+        #   ANCS
+        self.serial = None
 
+        self.has_completed_setup: bool = False
+
+        self.active_ancs_notifications: typing.List[ANCSMessage] = []
+
+        self.active_ancs_notification_to_detail: ANCSMessage = ANCSMessage | None
+
+        self.setup()
+
+    def setup(self):
+        self.set_serial()
+
+
+    #   ANCS
     def set_serial(self):
         self.serial = serial.Serial(
             port='/dev/ttyS0',
@@ -18,61 +35,63 @@ class ANCSiousReader:
             timeout=1
         )
 
-    def process_read_line(self, read_line):
-        read_line = read_line.decode('utf-8')
-        message_array = read_line.split('OK+ANCS')
-        for message in message_array:
-            # messages must be nine characters long to analyze.
-            if len(message) == 9:
-                self.process_ancs_message(message)
-
-    def process_ancs_message(self, message):
-        print(message)
-
-        if message[1:2] != "0":
-            return
-
-        message_type = message[2:3]
-
-        if message_type == '1': # phone call
-            print('phone call')
-        elif message_type == '4': # text message
-            print('text')
-
-        elif message_type == '9': # slack
-            print('slack')
-
-        else:
-            print(message_type)
-
-    def process(self):
-        self.set_serial()
-
-        # start up command to check if HM-10 is working.
-        print("SENDING \"AT\" to HM-10")
+    def setup_active_alerts(self):
+        print("Setting up active alerts.")
         self.serial.write("AT".encode())
+        self.has_completed_setup = True
 
-        print("STARTING SERIAL READ")
-
-        while True:
-            message = self.serial.readline()
-            if message == "":
+    def find_details_of_active_ancs_notifications(self):
+        for active_ancs_notification in self.active_ancs_notifications:
+            if active_ancs_notification.details_found:
                 continue
-            self.process_read_line(message)
+            self.find_details_of_active_ancs_notification(active_ancs_notification)
 
-    def shutdown(self):
+    def find_details_of_active_ancs_notification(self, ancs_notification):
+        self.active_ancs_notification_to_detail = ancs_notification
+
+        print(f"AT+ANCS{ancs_notification.event_id}000")
+        self.serial.write(f"AT+ANCS{ancs_notification.event_id}000".encode())
+
+    def process_ancs_alert(self, ancs_alert_string: str):
+        ancs_alert_string = ancs_alert_string[1:]
+        ancs_message_object = ANCSMessage.set_from_message_string(ancs_alert_string)
+
+        if ancs_message_object.action == 'ADDED':
+            self.active_ancs_notifications.append(ancs_message_object)
+        else:
+            self.active_ancs_notifications = [
+                x for x in self.active_ancs_notifications if x.event_id == ancs_message_object.event_id
+            ]
+
+    def process_ok_ancs_line_from_list(self, ok_ancs_line: str):
+        if len(ok_ancs_line) == 0:
+            return
+        if ok_ancs_line.startswith('8'):
+            self.process_ancs_alert(ok_ancs_line)
+
         pass
+
+    def process_line_from_hm_10(self, raw_hm_10_bits):
+        raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
+        if raw_hm_10_str == '':
+            return
+        #   Documentation suggests this should be "AT+ANCS,"
+        #   but it comes out at "OK+ANCS"
+        ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
+        for ok_ancs_str in ok_ancs_as_list:
+            self.process_ok_ancs_line_from_list(ok_ancs_str)
 
     def run(self):
         try:
-            self.process()
-        except KeyboardInterrupt as ki:
+            self.setup_active_alerts()
+            while True:
+                ancs_message = self.serial.readline()
+                self.process_line_from_hm_10(ancs_message)
+                time.sleep(0.05)
+        except KeyboardInterrupt as ke:
             pass
-        except Exception as e:
-            with open('errorlog.txt', 'w') as error_log:
-                error_log.write(str(e))
         finally:
             self.serial.close()
-            self.shutdown()
 
-ANCSiousReader().run()
+
+Accessibilitron().run()
