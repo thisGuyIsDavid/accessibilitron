@@ -12,7 +12,7 @@ class ANCSMessage:
         self.details_found: bool = False
 
     def __repr__(self):
-        return "%s: %s (%s), id: %s, value: %" % (
+        return "%s: %s (%s), id: %s, value: %s" % (
             self.action, self.category, self.count, self.event_id, ' '.join(self.detail_strings)
         )
 
