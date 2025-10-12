@@ -114,11 +114,12 @@ class Accessibilitron:
         #   This is identifying a notification.
         if 'OK+ANCSW' in raw_hm_10_str:
             self.process_ancs_w_line(raw_hm_10_str)
-            return
-        if 'OK+ANCS8' in raw_hm_10_str:
+        elif 'OK+ANCS8' in raw_hm_10_str:
             ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
             for ok_ancs_str in ok_ancs_as_list:
                 self.process_ok_ancs_line_from_list(ok_ancs_str)
+        else:
+            print(raw_hm_10_str)
 
     def run(self):
         try:
