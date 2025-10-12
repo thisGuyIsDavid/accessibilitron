@@ -19,6 +19,8 @@ firebase_admin.initialize_app(
 FIREBASE_REFRESH_SECONDS = 15
 HEARING_AID_PIN = 21
 
+
+
 class Accessibilitron:
 
     def __init__(self):
@@ -55,10 +57,10 @@ class Accessibilitron:
         if read_line == '':
             return
         read_line = read_line.decode('utf-8')
-        message_array = read_line.split('OK+ANCS')
+        message_array = read_line.split('OK+ANCS8')
         for message in message_array:
-            # Messages must be nine characters long to analyze.
-            if len(message) == 9:
+            # Messages must be eight characters long to analyze.
+            if len(message) == 8:
                 self.process_message(message)
 
     def process_message(self, message: str):
