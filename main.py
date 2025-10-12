@@ -28,7 +28,7 @@ class Accessibilitron:
     def __init__(self):
         #   ANCS
         self.serial = None
-        self.ancs_messages: typing.List[ANCSMessage] = []
+        self.ancs_alerts: typing.List[ANCSMessage] = []
 
         #   FIREBASE
         self.last_refresh_time: datetime.datetime | None = None
@@ -56,23 +56,30 @@ class Accessibilitron:
             timeout=1
         )
 
+    def process_ancs_alert(self, ancs_alert_string: str):
+        ancs_alert_string = ancs_alert_string[1:]
+        ancs_message_object = ANCSMessage.set_from_message_string(ancs_alert_string)
+        self.ancs_alerts.append(ancs_message_object)
+        print(ancs_message_object)
+
     def process_read_line(self, read_line_bits):
         read_line = read_line_bits.decode('utf-8')
+        if read_line == '':
+            return
         message_array = read_line.split('OK+ANCS')
         for message in message_array:
             if len(message) == 0:
                 continue
-
             parameter_1 = message[0]
-            print(parameter_1, message)
+
+            if parameter_1 == '8':
+                self.process_ancs_alert(message)
+            else:
+                print(parameter_1, message)
             continue
-
-            # Messages must be eight characters long to analyze.
-            if len(message) == 9:
-                self.process_message(message)
-        if len(self.ancs_messages) == 0:
-            return
-
+        if len(self.ancs_alerts) > 0:
+            print(f"AT+ANCS{self.ancs_alerts[0].event_id}000")
+            self.serial.write(f"AT+ANCS{self.ancs_alerts[0].event_id}000".encode())
 
     def process_message(self, message: str):
         if not message.startswith('8'):
@@ -80,7 +87,7 @@ class Accessibilitron:
         #   Strip the eight.
         message = message[1:]
         ancs_message_object = ANCSMessage.set_from_message_string(message)
-        self.ancs_messages.append(ancs_message_object)
+        self.ancs_alerts.append(ancs_message_object)
         print(f"AT+ANCS{ancs_message_object.event_id}000")
         self.serial.write(f"AT+ANCS{ancs_message_object.event_id}000".encode())
 
