@@ -91,7 +91,7 @@ class Accessibilitron:
                 print('new message', new_response)
                 new_response = ''
 
-            if message.startswith(': :'):
+            if message.startswith(':'):
                 new_response += message
             else:
                 print(message)
