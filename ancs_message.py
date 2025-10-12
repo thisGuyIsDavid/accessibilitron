@@ -62,8 +62,3 @@ class ANCSMessage:
             count=alert_count,
             event_id=event_id
         )
-
-x = ANCSMessage.set_from_message_string(
-    '80A000008'
-)
-print(x)

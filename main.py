@@ -7,6 +7,7 @@ import serial
 from firebase_admin import credentials
 from firebase_admin import db
 from gpiozero import LED
+from ancs_message import ANCSMessage
 
 #   Initialize Firebase
 firebase_admin.initialize_app(
@@ -64,7 +65,8 @@ class Accessibilitron:
                 self.process_message(message)
 
     def process_message(self, message: str):
-        print(message)
+        ancs_message_object = ANCSMessage.set_from_message_string(message)
+        print(ancs_message_object)
 
     #   FIREBASE
     def get_data_from_firebase(self):
