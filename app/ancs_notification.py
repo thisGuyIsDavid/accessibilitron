@@ -34,11 +34,7 @@ class ANCSNotification:
 
     def add_detail(self, detail_str: str):
         #   W string is provided to acknowledge receipt, but shouldn't be tracked.
-        if detail_str.startswith('W'):
-            return
-        if len(detail_str) > 4:
-            detail_str = detail_str[3:].strip().replace('\n', ' ')
-            self.detail_string += detail_str
+        self.detail_string = detail_str
 
     @staticmethod
     def set_from_message_string(message_string):

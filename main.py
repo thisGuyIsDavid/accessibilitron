@@ -96,7 +96,7 @@ class Accessibilitron:
         event_id = raw_ancs_w_line[3:7]
         for active_notification in self.active_notifications:
             if active_notification.event_id == event_id:
-                active_notification.set_from_message_string(raw_ancs_w_line)
+                active_notification.add_detail(raw_ancs_w_line)
                 active_notification.details_found = True
                 print(active_notification)
 
