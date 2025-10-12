@@ -86,7 +86,7 @@ class Accessibilitron:
         for active_notification in self.active_notifications:
             if active_notification.event_id == event_id:
                 active_notification.add_detail(detail)
-                print(active_notification)
+                print(active_notification, datetime.datetime.now())
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
