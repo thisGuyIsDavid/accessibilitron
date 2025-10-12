@@ -58,13 +58,17 @@ class Accessibilitron:
         if read_line == '':
             return
         read_line = read_line.decode('utf-8')
-        message_array = read_line.split('OK+ANCS8')
+        message_array = read_line.split('OK+ANCS')
         for message in message_array:
             # Messages must be eight characters long to analyze.
-            if len(message) == 8:
+            if len(message) == 9:
                 self.process_message(message)
 
     def process_message(self, message: str):
+        if not message.startswith('8'):
+            return
+        #   Strip the eight.
+        message = message[1:]
         ancs_message_object = ANCSMessage.set_from_message_string(message)
         print(ancs_message_object)
 

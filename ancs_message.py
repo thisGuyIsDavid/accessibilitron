@@ -30,7 +30,6 @@ class ANCSMessage:
 
     @staticmethod
     def set_from_message_string(message_string):
-        print(message_string)
         category_id_lookup = {
             "0": "OTHER",
             "1": "INCOMING CALL",
