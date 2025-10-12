@@ -16,7 +16,7 @@ class Accessibilitron:
 
         self.active_ancs_notifications: typing.List[ANCSMessage] = []
 
-        self.active_ancs_notification_to_detail: ANCSMessage = ANCSMessage | None
+        self.active_ancs_notification_to_detail = None
 
         self.setup()
 
