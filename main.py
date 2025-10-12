@@ -22,8 +22,6 @@ firebase_admin.initialize_app(
     }
 )
 
-
-
 class Accessibilitron:
 
     def __init__(self):
@@ -33,6 +31,9 @@ class Accessibilitron:
 
         #   REFRESH
         self.last_refresh_time: datetime.datetime = None
+
+        #   Firebase
+
 
         self.setup()
 
@@ -129,7 +130,7 @@ class Accessibilitron:
     def refresh(self):
         if not self.is_time_for_refresh():
             return
-        print('refresh time')
+        print('refresh time', datetime.datetime.now())
 
     def run(self):
         try:
