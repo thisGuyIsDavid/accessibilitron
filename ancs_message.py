@@ -38,7 +38,7 @@ class ANCSMessage:
         if detail_str.startswith('W'):
             return
         if len(detail_str) > 4:
-            self.detail_strings.append(detail_str[4:])
+            self.detail_strings.append(detail_str[3:])
 
     @staticmethod
     def set_from_message_string(message_string):
