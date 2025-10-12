@@ -60,12 +60,23 @@ class Accessibilitron:
         ancs_alert_string = ancs_alert_string[1:]
         ancs_message_object = ANCSMessage.set_from_message_string(ancs_alert_string)
         self.ancs_alerts.append(ancs_message_object)
-        print(ancs_message_object)
+        print('ALERT', ancs_message_object)
+
+    def find_details_of_alerts(self):
+        for alert in self.ancs_alerts:
+            if alert.details_found:
+                continue
+
+            print(f"AT+ANCS{alert.event_id}132")
+            self.serial.write(f"AT+ANCS{alert.event_id}132".encode())
+            alert.details_found = True
 
     def process_read_line(self, read_line_bits):
         read_line = read_line_bits.decode('utf-8')
         if read_line == '':
             return
+        #   Documentation suggests this should be "AT+ANCS,"
+        #   but it comes out at "OK+ANCS"
         message_array = read_line.split('OK+ANCS')
         for message in message_array:
             if len(message) == 0:
@@ -77,9 +88,8 @@ class Accessibilitron:
             else:
                 print(parameter_1, message)
             continue
-        if len(self.ancs_alerts) > 3:
-            print(f"AT+ANCS{self.ancs_alerts[2].event_id}132")
-            self.serial.write(f"AT+ANCS{self.ancs_alerts[2].event_id}132".encode())
+        self.find_details_of_alerts()
+
 
     def process_message(self, message: str):
         if not message.startswith('8'):

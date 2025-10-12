@@ -7,6 +7,7 @@ class ANCSMessage:
         self.action = kwargs.get('action')
         self.category = kwargs.get('category')
         self.count = kwargs.get('count')
+        self.details_found: bool = False
 
     def __repr__(self):
         return "%s: %s (%s), id: %s" % (self.action, self.category, self.count, self.event_id)
