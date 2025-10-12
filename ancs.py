@@ -68,7 +68,8 @@ class Accessibilitron:
             return
         if ok_ancs_line.startswith('8'):
             self.process_ancs_alert(ok_ancs_line)
-
+        else:
+            print(ok_ancs_line)
         pass
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
