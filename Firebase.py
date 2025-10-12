@@ -7,7 +7,7 @@ from firebase_admin import db
 
 #   Initialize Firebase
 firebase_admin.initialize_app(
-    credentials.Certificate('../accessibilitron-firebase-adminsdk-fbsvc-0bcf4b2f8e.json'),
+    credentials.Certificate('accessibilitron-firebase-adminsdk-fbsvc-0bcf4b2f8e.json'),
     {
         'databaseURL': 'https://accessibilitron-default-rtdb.firebaseio.com/'
     }
@@ -16,11 +16,11 @@ firebase_admin.initialize_app(
 FIREBASE_REFRESH_SECONDS = 15
 HEARING_AID_PIN = 21
 
+
 class Firebase:
 
     def __init__(self):
         #   FIREBASE
-        self.last_refresh_time: datetime.datetime = None
         self.latest_firebase_data = None
 
         #   HEARING AID
@@ -39,15 +39,3 @@ class Firebase:
             return
         self.is_hearing_aid_on = self.latest_firebase_data.get('hearing_aid').get('status') == 'ON'
         print(self.is_hearing_aid_on)
-
-    def is_time_for_refresh(self) -> bool:
-        current_time = datetime.datetime.now()
-        if self.last_refresh_time is None:
-            self.last_refresh_time = current_time
-            return True
-        if (current_time - self.last_refresh_time).seconds >= FIREBASE_REFRESH_SECONDS:
-            self.last_refresh_time = current_time
-            return True
-        return False
-
-Firebase().get_data_from_firebase()

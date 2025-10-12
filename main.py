@@ -3,44 +3,34 @@ import time
 import typing
 import datetime
 import serial
+
+from Display import Display
+from Firebase import Firebase
+
 from config import REFRESH_SECONDS
 
 from app.ancs_notification import ANCSNotification
 
-#   firebase = Firebase()
-
-
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import db
-
-#   Initialize Firebase
-firebase_admin.initialize_app(
-    credentials.Certificate('accessibilitron-firebase-adminsdk-fbsvc-0bcf4b2f8e.json'),
-    {
-        'databaseURL': 'https://accessibilitron-default-rtdb.firebaseio.com/'
-    }
-)
-
 class Accessibilitron:
-
     def __init__(self):
-        #   ANCS
-        self.serial = None
-        self.active_notifications: typing.List[ANCSNotification] = []
-
-        #   REFRESH
+        #   META
         self.last_refresh_time: datetime.datetime = None
 
         #   Firebase
+        self.firebase = Firebase()
 
+        #   Display
+        self.display = Display()
+
+        #   ANCS
+        self.serial = None
+        self.active_notifications: typing.List[ANCSNotification] = []
 
         self.setup()
 
     def setup(self):
         #   ANCS
         self.set_serial()
-
 
     #   ANCS
     def set_serial(self):
@@ -56,7 +46,6 @@ class Accessibilitron:
     def setup_active_notifications(self):
         print("Setting up active notifications.")
         self.serial.write("AT".encode())
-        self.has_completed_setup = True
 
     def find_details_of_active_ancs_notifications(self):
         notifications_to_detail = [x for x in self.active_notifications if not x.has_details()]
@@ -127,9 +116,19 @@ class Accessibilitron:
             return True
         return False
 
+
+    def set_display(self):
+        self.display.set_hearing_aid_light(
+            self.firebase.is_hearing_aid_on
+        )
+
     def refresh(self):
         if not self.is_time_for_refresh():
             return
+
+        self.firebase.get_data_from_firebase()
+        self.set_display()
+
         print('refresh time', datetime.datetime.now())
 
     def run(self):

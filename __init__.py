@@ -1,3 +1,5 @@
-from app.Display import Display
+from Display import Display
+from Firebase import Firebase
 
-display = Display()
+display_object = Display()
+firebase_object = Firebase()
