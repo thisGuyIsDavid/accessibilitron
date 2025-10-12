@@ -76,8 +76,10 @@ class Accessibilitron:
                 self.active_ancs_notification_to_detail.details_found = True
                 print(self.active_ancs_notification_to_detail)
                 self.active_ancs_notification_to_detail = None
-        if ok_ancs_line.startswith('8'):
+        elif ok_ancs_line.startswith('8'):
             self.process_ancs_alert(ok_ancs_line)
+
+        print(ok_ancs_line)
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
