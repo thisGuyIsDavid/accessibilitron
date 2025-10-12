@@ -44,12 +44,14 @@ class Accessibilitron:
 
     def find_details_of_active_ancs_notifications(self):
         #   Must do one at a time.
-        ancs_notifications_with_no_details = [x for x in self.active_ancs_notifications if not x.details_found]
-        if len(ancs_notifications_with_no_details) == 0:
-            return
-        self.active_ancs_notification_to_detail = ancs_notifications_with_no_details[0]
-        print(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000")
-        self.serial.write(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000".encode())
+        for ancs_notification in self.active_ancs_notifications:
+            if ancs_notification.details_found:
+                continue
+            self.active_ancs_notification_to_detail = ancs_notification
+            print(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000")
+            self.serial.write(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000".encode())
+            self.active_ancs_notification_to_detail.details_found = True
+            break
 
     def process_ancs_alert(self, ancs_alert_string: str):
         ancs_alert_string = ancs_alert_string[1:]
@@ -66,15 +68,7 @@ class Accessibilitron:
         if len(ok_ancs_line) == 0:
             return
         if self.active_ancs_notification_to_detail is not None:
-
-            print(ok_ancs_line[0], ok_ancs_line[0] in ['W', ':'])
-            if ok_ancs_line[0] in ['W', ':']:
-                self.active_ancs_notification_to_detail.add_detail(ok_ancs_line)
-                print('detail', ok_ancs_line)
-            else:
-                self.active_ancs_notification_to_detail.details_found = True
-                print(self.active_ancs_notification_to_detail)
-                self.active_ancs_notification_to_detail = None
+            print('gotten', ok_ancs_line, ok_ancs_line[0], ok_ancs_line[0] in ['W', ':'])
         elif ok_ancs_line.startswith('8'):
             self.process_ancs_alert(ok_ancs_line)
 
@@ -89,6 +83,7 @@ class Accessibilitron:
         ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
         for ok_ancs_str in ok_ancs_as_list:
             self.process_ok_ancs_line_from_list(ok_ancs_str)
+
 
     def run(self):
         try:
