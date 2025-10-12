@@ -30,6 +30,7 @@ class ANCSMessage:
 
     @staticmethod
     def set_from_message_string(message_string):
+        print(message_string)
         category_id_lookup = {
             "0": "OTHER",
             "1": "INCOMING CALL",
@@ -49,8 +50,6 @@ class ANCSMessage:
             "1": "MODIFIED",
             "2": "DELETED"
         }
-        message_string = message_string[1:]
-
         action_string = action_id_lookup[message_string[0]]
         category_string = category_id_lookup[message_string[1]]
         alert_count = int(message_string[3], 16)
