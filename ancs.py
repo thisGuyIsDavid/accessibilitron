@@ -43,17 +43,13 @@ class Accessibilitron:
         self.has_completed_setup = True
 
     def find_details_of_active_ancs_notifications(self):
-        for active_ancs_notification in self.active_ancs_notifications:
-            if active_ancs_notification.details_found:
-                continue
-            self.find_details_of_active_ancs_notification(active_ancs_notification)
-            break
-
-    def find_details_of_active_ancs_notification(self, ancs_notification):
-        self.active_ancs_notification_to_detail = ancs_notification
-
-        print(f"AT+ANCS{ancs_notification.event_id}000")
-        self.serial.write(f"AT+ANCS{ancs_notification.event_id}000".encode())
+        #   Must do one at a time.
+        ancs_notifications_with_no_details = [x for x in self.active_ancs_notifications if not x.details_found]
+        if len(ancs_notifications_with_no_details) == 0:
+            return
+        self.active_ancs_notification_to_detail = ancs_notifications_with_no_details[0]
+        print(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000")
+        self.serial.write(f"AT+ANCS{self.active_ancs_notification_to_detail.event_id}000".encode())
 
     def process_ancs_alert(self, ancs_alert_string: str):
         ancs_alert_string = ancs_alert_string[1:]
@@ -70,6 +66,7 @@ class Accessibilitron:
         if len(ok_ancs_line) == 0:
             return
         if self.active_ancs_notification_to_detail is not None:
+
             print(ok_ancs_line[0], ok_ancs_line[0] in ['W', ':'])
             if ok_ancs_line[0] in ['W', ':']:
                 self.active_ancs_notification_to_detail.add_detail(ok_ancs_line)
