@@ -17,6 +17,7 @@ class Accessibilitron:
         #   ANCS
         self.serial = None
         self.has_completed_setup: bool = False
+
         self.active_notifications: typing.List[ANCSNotification] = []
 
         self.id_of_notification_to_detail = None
@@ -56,9 +57,6 @@ class Accessibilitron:
             return idx
 
     def find_details_of_active_ancs_notifications(self):
-        if self.notification_to_detail is not None:
-            pass
-
         for notification in self.active_notifications:
             if notification.details_found:
                 continue
@@ -67,7 +65,7 @@ class Accessibilitron:
 
         if self.id_of_notification_to_detail is None:
             return
-
+        print(f"AT+ANCS{self.id_of_notification_to_detail}000")
         self.serial.write(f"AT+ANCS{self.id_of_notification_to_detail}000".encode())
 
     def process_ancs_notification(self, ancs_notification_string: str):
