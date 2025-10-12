@@ -1,7 +1,6 @@
-from typing import List
 
-class ANCSMessage:
 
+class ANCSNotification:
     def __init__(self, **kwargs):
         self.event_id = kwargs.get('event_id')
         self.action = kwargs.get('action')
@@ -67,7 +66,7 @@ class ANCSMessage:
         alert_count = int(message_string[3], 16)
         event_id = message_string[4:]
 
-        return ANCSMessage(
+        return ANCSNotification(
             action=action_string,
             category=category_string,
             count=alert_count,
