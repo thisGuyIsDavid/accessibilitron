@@ -4,11 +4,10 @@ import datetime
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-from gpiozero import LED
 
 #   Initialize Firebase
 firebase_admin.initialize_app(
-    credentials.Certificate('accessibilitron-firebase-adminsdk-fbsvc-0bcf4b2f8e.json'),
+    credentials.Certificate('../accessibilitron-firebase-adminsdk-fbsvc-0bcf4b2f8e.json'),
     {
         'databaseURL': 'https://accessibilitron-default-rtdb.firebaseio.com/'
     }
@@ -26,7 +25,6 @@ class Firebase:
 
         #   HEARING AID
         self.is_hearing_aid_on: bool = False
-        self.hearing_aid_led = LED(HEARING_AID_PIN)
 
     def get_data_from_firebase(self):
         # Get a database reference to our posts
@@ -40,11 +38,7 @@ class Firebase:
             self.is_hearing_aid_on = False
             return
         self.is_hearing_aid_on = self.latest_firebase_data.get('hearing_aid').get('status') == 'ON'
-
-        if self.is_hearing_aid_on:
-            self.hearing_aid_led.on()
-        else:
-            self.hearing_aid_led.off()
+        print(self.is_hearing_aid_on)
 
     def is_time_for_refresh(self) -> bool:
         current_time = datetime.datetime.now()
@@ -55,3 +49,5 @@ class Firebase:
             self.last_refresh_time = current_time
             return True
         return False
+
+Firebase().get_data_from_firebase()

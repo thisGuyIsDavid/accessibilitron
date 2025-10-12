@@ -1,0 +1,3 @@
+HEARING_AID_PIN: int = 21
+
+REFRESH_SECONDS: int = 15

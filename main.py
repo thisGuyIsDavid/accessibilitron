@@ -1,15 +1,29 @@
 # !/usr/bin/env python
-import datetime
 import time
 import typing
-
-import firebase_admin
+import datetime
 import serial
-from firebase_admin import credentials
-from gpiozero import LED
-from firebase_admin import db
+from config import REFRESH_SECONDS
 
 from app.ancs_notification import ANCSNotification
+
+from app.Firebase import Firebase
+
+#   firebase = Firebase()
+
+
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import db
+
+#   Initialize Firebase
+firebase_admin.initialize_app(
+    credentials.Certificate('../accessibilitron-firebase-adminsdk-fbsvc-0bcf4b2f8e.json'),
+    {
+        'databaseURL': 'https://accessibilitron-default-rtdb.firebaseio.com/'
+    }
+)
+
 
 
 class Accessibilitron:
@@ -17,12 +31,17 @@ class Accessibilitron:
     def __init__(self):
         #   ANCS
         self.serial = None
-        self.has_completed_setup: bool = False
         self.active_notifications: typing.List[ANCSNotification] = []
+
+        #   REFRESH
+        self.last_refresh_time: datetime.datetime = None
+
         self.setup()
 
     def setup(self):
+        #   ANCS
         self.set_serial()
+
 
     #   ANCS
     def set_serial(self):
@@ -36,8 +55,6 @@ class Accessibilitron:
         )
 
     def setup_active_notifications(self):
-        if self.has_completed_setup:
-            return
         print("Setting up active notifications.")
         self.serial.write("AT".encode())
         self.has_completed_setup = True
@@ -101,14 +118,32 @@ class Accessibilitron:
         else:
             print(raw_hm_10_str)
 
+
+
+    def is_time_for_refresh(self) -> bool:
+        current_time = datetime.datetime.now()
+        if self.last_refresh_time is None:
+            self.last_refresh_time = current_time
+            return True
+        if (current_time - self.last_refresh_time).seconds >= REFRESH_SECONDS:
+            self.last_refresh_time = current_time
+            return True
+        return False
+
     def run(self):
         try:
             self.setup_active_notifications()
             while True:
+                #   ANCS
                 ancs_message = self.serial.readline()
                 self.process_line_from_hm_10(ancs_message)
-                time.sleep(0.05)
                 self.find_details_of_active_ancs_notifications()
+
+                #   FIREBASE
+
+
+                time.sleep(0.05)
+
         except KeyboardInterrupt as ke:
             pass
         finally:
