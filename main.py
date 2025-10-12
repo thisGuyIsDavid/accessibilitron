@@ -58,11 +58,12 @@ class Accessibilitron:
 
     def process_read_line(self, read_line_bits):
         read_line = read_line_bits.decode('utf-8')
-        print('read line', read_line)
-        print('read bits', read_line_bits)
-
         message_array = read_line.split('OK+ANCS')
         for message in message_array:
+            parameter_1 = message[0]
+            print(parameter_1, message)
+            continue
+
             # Messages must be eight characters long to analyze.
             if len(message) == 9:
                 self.process_message(message)
