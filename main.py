@@ -7,8 +7,6 @@ from config import REFRESH_SECONDS
 
 from app.ancs_notification import ANCSNotification
 
-from app.Firebase import Firebase
-
 #   firebase = Firebase()
 
 
