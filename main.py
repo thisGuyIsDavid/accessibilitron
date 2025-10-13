@@ -53,7 +53,7 @@ class Accessibilitron:
         if len(notifications_to_detail) == 0:
             return
         notification_to_detail = notifications_to_detail[0]
-        #   print(f"SENDING: AT+ANCS{notification_to_detail.event_id}000")
+        print(f"SENDING: AT+ANCS{notification_to_detail.event_id}000")
         self.serial.write(f"AT+ANCS{notification_to_detail.event_id}000".encode())
 
     def process_ancs_notification(self, ancs_notification_string: str):
