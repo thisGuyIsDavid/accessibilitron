@@ -160,7 +160,7 @@ class Accessibilitron:
                 self.process_line_from_hm_10(ancs_message)
                 self.find_details_of_active_ancs_notifications()
 
-                #   self.refresh()
+                self.refresh()
                 time.sleep(0.05)
         except KeyboardInterrupt as ke:
             pass
