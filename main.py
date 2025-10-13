@@ -49,12 +49,17 @@ class Accessibilitron:
         self.serial.write("AT".encode())
 
     def find_details_of_active_ancs_notifications(self):
-        notifications_to_detail = [x for x in self.active_notifications if not x.has_details()]
+        notifications_to_detail = [
+            x for x in self.active_notifications
+            if not x.has_details() and not x.has_been_queried
+        ]
         if len(notifications_to_detail) == 0:
             return
         notification_to_detail = notifications_to_detail[0]
-        print(f"SENDING: AT+ANCS{notification_to_detail.event_id}000")
-        self.serial.write(f"AT+ANCS{notification_to_detail.event_id}000".encode())
+
+        query_string = notification_to_detail.get_query_string()
+        print(f"SENDING:", query_string)
+        self.serial.write(query_string.encode())
 
     def process_ancs_notification(self, ancs_notification_string: str):
         ancs_notification_string = ancs_notification_string[1:]

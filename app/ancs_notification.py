@@ -7,6 +7,8 @@ class ANCSNotification:
         self.category = kwargs.get('category')
         self.count = kwargs.get('count')
 
+        self.has_been_queried: bool = False
+
         self.detail_string: str = ''
 
     def __repr__(self):
@@ -70,3 +72,7 @@ class ANCSNotification:
             count=alert_count,
             event_id=event_id
         )
+
+    def get_query_string(self):
+        self.has_been_queried = True
+        return f"AT+ANCS{self.event_id}000"
