@@ -10,4 +10,3 @@ firebase_admin.initialize_app(
 )
 
 from firebase_admin import db as real_time_database
-print('here')

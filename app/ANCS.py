@@ -69,10 +69,14 @@ class ANCS:
             return
         #   Documentation suggests this should be "AT+ANCS,"
         #   but it comes out at "OK+ANCS"
-        if 'OK+ANCS8' in raw_hm_10_str:
-            ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
-            for ok_ancs_str in ok_ancs_as_list:
-                self.process_ok_ancs_line_from_list(ok_ancs_str)
+        if 'OK+ANCS8' not in raw_hm_10_str:
+            return
+
+        ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
+        for ok_ancs_str in ok_ancs_as_list:
+            print(ok_ancs_str)
+            self.process_ok_ancs_line_from_list(ok_ancs_str)
+
 
     def run(self):
         try:
