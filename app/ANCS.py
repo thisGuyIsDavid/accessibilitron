@@ -45,7 +45,6 @@ class ANCS:
 
     def process_ancs_notification(self, ancs_notification_string: str):
         message_string = ancs_notification_string[1:]
-
         ancs_notification = ANCSNotification.set_from_message_string(message_string)
 
         #   We are only concerned with active calls and missed calls.
@@ -54,14 +53,14 @@ class ANCS:
 
         if ancs_notification.action == 'ADDED':
             self.process_added_notification(ancs_notification)
+            print(ancs_notification)
         else:
             self.process_removed_notification(ancs_notification)
 
     def process_ok_ancs_line_from_list(self, ok_ancs_line: str):
-        if len(ok_ancs_line) == 0:
+        if len(ok_ancs_line) == 0 or not ok_ancs_line.startswith('8'):
             return
-        elif ok_ancs_line.startswith('8'):
-            self.process_ancs_notification(ok_ancs_line)
+        self.process_ancs_notification(ok_ancs_line)
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
