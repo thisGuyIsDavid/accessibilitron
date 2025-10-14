@@ -1,17 +1,6 @@
 # !/usr/bin/env python
 import datetime
-
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import db
-
-#   Initialize Firebase
-firebase_admin.initialize_app(
-    credentials.Certificate('accessibilitron-firebase-adminsdk-fbsvc-0bcf4b2f8e.json'),
-    {
-        'databaseURL': 'https://accessibilitron-default-rtdb.firebaseio.com/'
-    }
-)
+from app import real_time_database
 
 FIREBASE_REFRESH_SECONDS = 15
 HEARING_AID_PIN = 21
@@ -28,8 +17,8 @@ class Firebase:
 
     def get_data_from_firebase(self):
         # Get a database reference to our posts
-        self.latest_firebase_data = db.reference().get()
-
+        self.latest_firebase_data = real_time_database.reference().get()
+        print(self.latest_firebase_data)
         self.set_hearing_aid_status()
         self.latest_firebase_data = None
 
@@ -38,3 +27,14 @@ class Firebase:
             self.is_hearing_aid_on = False
             return
         self.is_hearing_aid_on = self.latest_firebase_data.get('hearing_aid').get('status') == 'ON'
+
+    def listener(self, event):
+        self.get_data_from_firebase()
+        print(event)
+
+    def run(self):
+        database_reference = real_time_database.reference()
+        database_reference.listen(self.listener)
+        pass
+
+Firebase().run()

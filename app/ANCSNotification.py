@@ -1,4 +1,3 @@
-import datetime
 
 class ANCSNotification:
     def __init__(self, **kwargs):
@@ -7,37 +6,10 @@ class ANCSNotification:
         self.category = kwargs.get('category')
         self.count = kwargs.get('count')
 
-        self.has_been_queried: bool = False
-
-        self.detail_string: str = ''
-
     def __repr__(self):
-        return "%s: %s (%s), id: %s, details: %s" % (
-            self.action, self.category, self.count, self.event_id, self.detail_string.strip()
+        return "%s: %s (%s), id: %s" % (
+            self.action, self.category, self.count, self.event_id
         )
-
-    def to_json(self):
-        return {
-            "event_id": self.event_id,
-            "action": self.action,
-            "category": self.category,
-            "count": self.count
-        }
-
-    def __eq__(self, other):
-        return self.event_id == other.event_id and self.action == other.action and self.category == self.category
-
-    def __ne__(self, other):
-        return not (self == other)
-
-    def get_unique_string(self):
-        return "%s_%s" % (self.category, self.event_id)
-
-    def has_details(self):
-        return self.detail_string != ''
-
-    def add_detail(self, detail_str: str):
-        self.detail_string = detail_str
 
     @staticmethod
     def set_from_message_string(message_string):
@@ -60,7 +32,7 @@ class ANCSNotification:
             "1": "MODIFIED",
             "2": "DELETED"
         }
-        print(message_string, datetime.datetime.now())
+
         action_string = action_id_lookup[message_string[0]]
         category_string = category_id_lookup[message_string[1]]
         alert_count = int(message_string[3], 16)
@@ -72,7 +44,3 @@ class ANCSNotification:
             count=alert_count,
             event_id=event_id
         )
-
-    def get_query_string(self):
-        self.has_been_queried = True
-        return f"AT+ANCS{self.event_id}000"
