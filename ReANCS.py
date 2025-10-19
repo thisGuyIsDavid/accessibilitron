@@ -10,6 +10,11 @@ with serial.Serial(
     for i in range(2):
         ser.readline()
         time.sleep(0.5)
+    ser.write("AT".encode())
+    while True:
+        x = ser.readline()
+        print(x)
+        time.sleep(0.5)
 
 
 
