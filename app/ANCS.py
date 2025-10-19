@@ -26,7 +26,7 @@ class ANCS:
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
-            timeout=1
+            timeout=3
         )
 
     def setup_active_notifications(self):
