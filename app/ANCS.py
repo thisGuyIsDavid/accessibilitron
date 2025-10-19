@@ -94,4 +94,3 @@ class ANCS:
         finally:
             print('closing serial')
             self.serial.close()
-re
