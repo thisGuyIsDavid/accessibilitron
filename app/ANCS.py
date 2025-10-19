@@ -82,7 +82,7 @@ class ANCS:
             while True:
                 #   ANCS
                 try:
-                    ancs_message = self.serial.readline()
+                    ancs_message = self.serial.read_until(b'OK')
                     print(ancs_message)
                     self.process_line_from_hm_10(ancs_message)
                 except serial.serialutil.SerialException as e:
