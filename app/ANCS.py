@@ -64,6 +64,7 @@ class ANCS:
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8', errors='ignore')
+        print(raw_hm_10_str)
         if raw_hm_10_str == '':
             return
         #   Documentation suggests this should be "AT+ANCS,"
@@ -83,7 +84,6 @@ class ANCS:
                 #   ANCS
                 try:
                     ancs_message = self.serial.readline()
-                    print(ancs_message)
                     self.process_line_from_hm_10(ancs_message)
                 except serial.serialutil.SerialException as e:
                     print(e)
