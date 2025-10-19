@@ -92,9 +92,6 @@ class ANCS:
                 time.sleep(0.05)
         except KeyboardInterrupt as ke:
             pass
-        except Exception as e:
-            print('Exception')
-            print(e)
         finally:
             print('closing serial')
             self.serial.close()
