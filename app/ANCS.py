@@ -63,18 +63,13 @@ class ANCS:
         self.process_ancs_notification(ok_ancs_line)
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
-        try:
-            raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
-        except UnicodeDecodeError as e:
-            print('encoding error', e)
-            return
+        raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8', errors='ignore')
         if raw_hm_10_str == '':
             return
         #   Documentation suggests this should be "AT+ANCS,"
         #   but it comes out at "OK+ANCS"
         if 'OK+ANCS8' not in raw_hm_10_str:
             return
-
         ok_ancs_as_list: typing.List[str] = raw_hm_10_str.split('OK+ANCS')
         for ok_ancs_str in ok_ancs_as_list:
             print(ok_ancs_str)
