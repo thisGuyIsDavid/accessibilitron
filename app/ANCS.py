@@ -63,7 +63,10 @@ class ANCS:
         self.process_ancs_notification(ok_ancs_line)
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
-        raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
+        try:
+            raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8')
+        except UnicodeDecodeError:
+            return
         if raw_hm_10_str == '':
             return
         #   Documentation suggests this should be "AT+ANCS,"
