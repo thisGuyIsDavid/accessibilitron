@@ -6,7 +6,7 @@ import time
 with serial.Serial(
         port='/dev/serial0', baudrate=9600, parity=serial.PARITY_NONE,
         stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=0) as ser:
-    ser.write("AT+ADDR?\r\n".encode())
+    ser.write("AT+ADDR?\r\n")
     while True:
         x = ser.read()
         print(x)
