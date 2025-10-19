@@ -10,7 +10,7 @@ with serial.Serial(
     for i in range(2):
         ser.readline()
         time.sleep(0.5)
-    ser.write("AT".encode())
+    ser.write("AT+ANCS?".encode())
     while True:
         x = ser.readline()
         print(x)
