@@ -83,6 +83,7 @@ class ANCS:
             while True:
                 #   ANCS
                 ancs_message = self.serial.readline()
+                print(ancs_message)
                 self.process_line_from_hm_10(ancs_message)
                 time.sleep(0.05)
         except KeyboardInterrupt as ke:
