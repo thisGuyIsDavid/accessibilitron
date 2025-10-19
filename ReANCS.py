@@ -8,7 +8,7 @@ with serial.Serial(
         stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=0) as ser:
     ser.write("AT+ADDR?\n".encode())
     while True:
-        x = ser.readline()
+        x = ser.read()
         print(x)
         time.sleep(0.5)
 
