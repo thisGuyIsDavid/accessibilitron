@@ -91,5 +91,6 @@ class ANCS:
             print('Exception')
             print(e)
         finally:
+            print('closing serial')
             self.serial.close()
 
