@@ -26,7 +26,7 @@ class ANCS:
             parity=serial.PARITY_NONE,
             stopbits=serial.STOPBITS_ONE,
             bytesize=serial.EIGHTBITS,
-            timeout=0
+            timeout=1
         )
 
     def setup_active_notifications(self):
@@ -81,13 +81,17 @@ class ANCS:
             self.setup_active_notifications()
             while True:
                 #   ANCS
-                ancs_message = self.serial.readline()
-                print(ancs_message)
-                self.process_line_from_hm_10(ancs_message)
-                time.sleep(0.05)
+                try:
+                    ancs_message = self.serial.readline()
+                    print(ancs_message)
+                    self.process_line_from_hm_10(ancs_message)
+                except serial.serialutil.SerialException as e:
+                    print(e)
+                finally:
+                    time.sleep(0.05)
         except KeyboardInterrupt as ke:
             pass
         finally:
             print('closing serial')
             self.serial.close()
-
+re
