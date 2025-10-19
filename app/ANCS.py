@@ -64,7 +64,10 @@ class ANCS:
 
     def process_line_from_hm_10(self, raw_hm_10_bits):
         raw_hm_10_str: str = raw_hm_10_bits.decode('utf-8', errors='ignore')
-        print(raw_hm_10_str)
+
+        print('after ignore', raw_hm_10_str)
+        print('after ignore ascii', raw_hm_10_bits.decode('ascii', errors='ignore'))
+
         if raw_hm_10_str == '':
             return
         #   Documentation suggests this should be "AT+ANCS,"
